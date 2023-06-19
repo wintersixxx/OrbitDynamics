@@ -1,0 +1,114 @@
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+ 
+miu = 3.003480575402412*10**(-6)
+L1 = 0.990026593891877
+alpha = 0.001
+r1 = L1 + miu 
+r2 = -(L1 - 1 + miu)
+c2 = (1 - miu) / (r1**3) + miu / (r2**3)
+omega0 = pow((- c2 + 2 + pow(9 * c2**2 - 8*c2, 0.5))/2,0.5)
+K = - 0.5 * (omega0 + (1+ 2*c2)/omega0)
+x1 = L1 + alpha
+x2 = 0
+x3 = 0
+x4 = 0
+x5 = K * alpha * omega0
+x6 = 0
+
+print(L1,0,0)
+print(x1,x2,x3,x4,x5,x6)
+y0 = [x1,x2,x3,x4,x5,x6,
+       1,0,0,0,0,0,\
+       0,1,0,0,0,0,\
+       0,0,1,0,0,0,\
+       0,0,0,1,0,0,\
+       0,0,0,0,1,0,\
+       0,0,0,0,0,1]
+
+def fun(t, y):
+
+    ydot    = np.empty((42,))
+    ydot[:] = np.nan
+
+    rr1 = np.sqrt((y[0]+miu)**2 + y[1]**2 +y[2]**2)
+    rr2 = np.sqrt((y[0]+miu-1)**2 + y[1]**2 +y[2]**2)
+    ydot[0] = y[3]             
+    ydot[1] = y[4]             
+    ydot[2] = y[5]  
+    ydot[3] = y[0]+2*y[4]-((1-miu)*(y[0]+miu))/(rr1**3)-(miu*(y[0]+miu-1))/(rr2**3)
+    ydot[4] = y[1]-2*y[3]-((1-miu)*y[1])/(rr1**3)-(miu*y[1])/(rr2**3)
+    ydot[5] = -((1-miu)*y[2])/(rr1**3)-(miu*y[2])/(rr2**3)  
+
+    aa = (1 - (1-miu)/rr1**3 + (3*(y[0]+miu)**2*(1-miu))/rr1**5 -miu/rr2**3 +(3*miu*(y[0]+miu-1)**2)/rr2**5)
+    bb = (3*(1-miu)*(y[0]+miu)*y[1]/rr1**5 + 3*miu*y[1]*(y[0]+miu-1)/rr2**5)
+    cc = (3*(1-miu)*(y[0]+miu)*y[2]/rr1**5 + 3*miu*y[2]*(y[0]+miu-1)/rr2**5)
+
+    dd = (3*(1-miu)*(y[0]+miu)*y[1]/rr1**5 + 3*miu*(y[0]+miu-1)*y[1]/rr2**5)
+    ee = (1-(1-miu)/rr1**3+3*(1-miu)*y[1]**2/rr1**5 -miu/rr2**3+3*miu*y[1]**2/rr2**5)
+    ff = (3*(1-miu)*y[1]*y[2]/rr1**5 + 3*miu*y[1]*y[2]/rr2**5)
+
+    gg = ((3*y[2]*(1-miu)*(y[0]+miu))/(rr1**5) + (3*y[2]*miu*(y[0]+miu-1))/(rr2**5))
+    hh = ((3*y[2]*(1-miu)*y[1])/(rr1**5) + (3*y[2]*miu*y[1])/(rr2**5))
+    ii = (-(1-miu)/rr1**3 + 3*(1-miu)*y[2]**2/rr1**5-miu/rr2**3+3*miu*y[2]**2/rr2**5)
+
+    ydot[6] =  y[24]
+    ydot[7] =  y[25]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+    ydot[8] =  y[26]
+    ydot[9] =  y[27]
+    ydot[10] =  y[28]
+    ydot[11] =  y[29]
+
+    ydot[12] =  y[30]
+    ydot[13] =  y[31]
+    ydot[14] =  y[32]
+    ydot[15] =  y[33]
+    ydot[16] =  y[34]
+    ydot[17] =  y[35]
+
+    ydot[18] =  y[36]
+    ydot[19] =  y[37]
+    ydot[20] =  y[38]
+    ydot[21] =  y[39]
+    ydot[22] =  y[40]
+    ydot[23] =  y[41]   
+
+    ydot[24] =  aa*y[6]+bb*y[12]+cc*y[18]+2*y[30]
+    ydot[25] =  aa*y[7]+bb*y[13]+cc*y[19]+2*y[31]
+    ydot[26] =  aa*y[8]+bb*y[14]+cc*y[20]+2*y[32]
+    ydot[27] =  aa*y[9]+bb*y[15]+cc*y[21]+2*y[33]
+    ydot[28] =  aa*y[10]+bb*y[16]+cc*y[22]+2*y[34]
+    ydot[29] =  aa*y[11]+bb*y[17]+cc*y[23]+2*y[35] 
+
+    ydot[30] =  dd*y[6]+ee*y[12]+ff*y[18]-2*y[24]
+    ydot[31] =  dd*y[7]+ee*y[13]+ff*y[19]-2*y[25]
+    ydot[32] =  dd*y[8]+ee*y[14]+ff*y[20]-2*y[26]
+    ydot[33] =  dd*y[9]+ee*y[15]+ff*y[21]-2*y[27]
+    ydot[34] =  dd*y[10]+ee*y[16]+ff*y[22]-2*y[28]
+    ydot[35] =  dd*y[11]+ee*y[17]+ff*y[23]-2*y[29] 
+
+    ydot[36] =  gg*y[6]+ hh*y[12]+ ii*y[18]
+    ydot[37] =  gg*y[7]+ hh*y[13]+ ii*y[19]
+    ydot[38] =  gg*y[8]+ hh*y[14]+ ii*y[20]
+    ydot[39] =  gg*y[9]+ hh*y[15]+ ii*y[21]
+    ydot[40] =  gg*y[10]+hh*y[16]+ii*y[22]
+    ydot[41] =  gg*y[11]+hh*y[17]+ii*y[23]
+
+    return ydot
+
+# Time steps
+t_span = (0, 2*np.pi/omega0)
+t_eval = np.linspace(t_span[0], t_span[1], 1000)
+sol_rk = solve_ivp(fun, t_span, y0, method='RK45', t_eval=t_eval)
+print(sol_rk.y[0][999],sol_rk.y[1][999],sol_rk.y[2][999],sol_rk.y[3][999],sol_rk.y[4][999],sol_rk.y[5][999])    
+
+print(sol_rk.y[6][999],sol_rk.y[7][999],sol_rk.y[8][999],sol_rk.y[9][999],sol_rk.y[10][999],sol_rk.y[11][999])     
+print(sol_rk.y[12][999],sol_rk.y[13][999],sol_rk.y[14][999],sol_rk.y[15][999],sol_rk.y[16][999],sol_rk.y[17][999])   
+print(sol_rk.y[18][999],sol_rk.y[19][999],sol_rk.y[20][999],sol_rk.y[21][999],sol_rk.y[22][999],sol_rk.y[23][999])     
+print(sol_rk.y[24][999],sol_rk.y[25][999],sol_rk.y[26][999],sol_rk.y[27][999],sol_rk.y[28][999],sol_rk.y[29][999]) 
+print(sol_rk.y[30][999],sol_rk.y[31][999],sol_rk.y[32][999],sol_rk.y[33][999],sol_rk.y[34][999],sol_rk.y[35][999])     
+print(sol_rk.y[36][999],sol_rk.y[37][999],sol_rk.y[38][999],sol_rk.y[39][999],sol_rk.y[40][999],sol_rk.y[41][999]) 
+plt.plot(sol_rk.y[0], sol_rk.y[1])
+plt.show()
